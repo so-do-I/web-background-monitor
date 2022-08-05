@@ -8,7 +8,7 @@ const AccessPage: React.FC = () => {
         title: '权限示例',
       }}
     >
-      123
+      HTTP
     </PageContainer>
   );
 };
