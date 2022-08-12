@@ -1,43 +1,46 @@
-import { UserOutlined } from '@ant-design/icons';
-import { Avatar, Dropdown, Layout, Menu } from 'antd';
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { PoweroffOutlined } from '@ant-design/icons';
+import { history, useModel } from '@umijs/max';
+import type { MenuProps } from 'antd';
+import { Dropdown, Menu, Space } from 'antd';
+import React, { useEffect } from 'react';
 
-interface Props {
-  name: string;
-}
-const { Header } = Layout;
+const TopHeader: React.FC = () => {
+  const { initialState, setInitialState } = useModel('@@initialState');
 
-// 脚手架示例组件
-const TopHeader: React.FC<Props> = (props) => {
-  const navigate = useNavigate();
-  const { name } = props;
+  useEffect(() => {
+    //退出登录，清空存储并跳转至登录页面
+    if (!initialState?.isLogin) {
+      localStorage.removeItem('userInfo');
+      sessionStorage.removeItem('userInfo');
+      history.push('/login');
+    }
+  }, [initialState]);
+
+  const handleMenuClick: MenuProps['onClick'] = () => {
+    setInitialState({
+      isLogin: false,
+      username: null,
+    });
+  };
+
   const menu = (
-    <Menu>
-      <Menu.Item>{/* {roleName} */}超级管理员</Menu.Item>
-
-      <Menu.Item
-        danger
-        onClick={() => {
-          localStorage.removeItem('token');
-          navigate('/login');
-        }}
-      >
-        退出
-      </Menu.Item>
-    </Menu>
+    <Menu
+      onClick={handleMenuClick}
+      items={[
+        {
+          label: '退出',
+          key: '1',
+          icon: <PoweroffOutlined />,
+        },
+      ]}
+    />
   );
   return (
-    <Header className="site-layout-background" style={{ padding: '0 16px' }}>
-      <div style={{ float: 'right' }}>
-        <span>
-          欢迎<span style={{ color: '#1890ff' }}>{name}</span>回来
-        </span>
-        <Dropdown overlay={menu}>
-          <Avatar size="large" icon={<UserOutlined />} />
-        </Dropdown>
-      </div>
-    </Header>
+    <Space wrap>
+      <Dropdown.Button overlay={menu}>
+        {initialState!.isLogin ? initialState!.username : ''}
+      </Dropdown.Button>
+    </Space>
   );
 };
 

@@ -1,18 +1,47 @@
 import { history, useModel } from '@umijs/max';
-import { Button, Card, Checkbox, Col, Form, Input, Row } from 'antd';
-import React from 'react';
+import { Button, Card, Col, Form, Input, notification, Row } from 'antd';
+import React, { useEffect } from 'react';
+import { request } from 'umi';
 
 const Login: React.FC = () => {
-  const { setInitialState } = useModel('@@initialState');
-  const onFinish = (values: any) => {
-    console.log('Success:', values);
-    setInitialState({
-      isLogin: true,
-      user: values,
-    });
-    setTimeout(() => {
+  const { initialState, setInitialState } = useModel('@@initialState');
+
+  //判断是否登录决定是否跳转至登录页
+  useEffect(() => {
+    if (initialState?.isLogin) {
       history.push('/');
-    }, 100);
+    }
+  }, [initialState]);
+
+  //登录失败提示
+  const openNotification = () => {
+    notification.open({
+      message: '登录失败',
+      description: '用户名或密码错误，请重试！',
+    });
+  };
+
+  //提交用户名与密码的逻辑
+  const onFinish = async (values: any) => {
+    let res = await request(
+      'https://mock.apifox.cn/m1/1411666-0-default/api/admin/login',
+      {
+        method: 'post',
+        data: {
+          user_name: values.username,
+          password: values.password,
+        },
+      },
+    );
+    //根据返回信息设置登录信息
+    if (res.loginSuccess) {
+      setInitialState({
+        isLogin: true,
+        username: values.username,
+      });
+    } else {
+      openNotification();
+    }
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -50,14 +79,6 @@ const Login: React.FC = () => {
               ]}
             >
               <Input.Password />
-            </Form.Item>
-
-            <Form.Item
-              name="remember"
-              valuePropName="checked"
-              wrapperCol={{ offset: 10, span: 8 }}
-            >
-              <Checkbox>记住我</Checkbox>
             </Form.Item>
 
             <Form.Item wrapperCol={{ offset: 10, span: 8 }}>
