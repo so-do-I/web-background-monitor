@@ -35,6 +35,7 @@ const Login: React.FC = () => {
     );
     //根据返回信息设置登录信息
     if (res.loginSuccess) {
+      // if (1) {
       setInitialState({
         isLogin: true,
         username: values.username,

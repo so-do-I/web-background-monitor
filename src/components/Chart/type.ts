@@ -1,6 +1,6 @@
 export type Props = {
   title: string;
-  data: [];
+  data: any[];
   date: string[];
 };
 
