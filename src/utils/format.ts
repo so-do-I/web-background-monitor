@@ -8,8 +8,10 @@ export function formatOriginLineDataToComponents(lineData: API.lineResponse) {
   // const lineData = []
   // const descriptionData = []
   // const staicData = []
+  console.log('lineData', lineData);
   const date = lineData?.date as string[];
   const classificationData: { [key: string]: any[] } = {};
+  const staticData: { [key: string]: any[] } = {};
 
   lineData.data!.forEach((element) => {
     if (classificationData[element.type]) {
@@ -17,6 +19,24 @@ export function formatOriginLineDataToComponents(lineData: API.lineResponse) {
     } else {
       classificationData[element.type] = [element.data];
     }
+    if (staticData[element.type]) {
+      staticData[element.type].push({
+        title: element.data.event_descirption!,
+        data: element.data.data!,
+        subTitle: element.data.event_name!,
+        units: element.data.units!,
+      });
+    } else {
+      staticData[element.type] = [
+        {
+          title: element.data.event_descirption!,
+          data: element.data.data!,
+          subTitle: element.data.event_name!,
+          units: element.data.units!,
+        },
+      ];
+    }
   });
-  return { date, classificationData };
+  console.log(classificationData);
+  return { date, classificationData, staticData };
 }

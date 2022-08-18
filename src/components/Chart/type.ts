@@ -11,8 +11,14 @@ export type MyDescProps = {
   };
 };
 export type MyStatProps = {
-  title: string;
-  data: number[];
+  title?: string;
+  path?: string;
+  data?: {
+    title: string;
+    subTitle: string;
+    data: number[];
+    units: string;
+  }[];
 };
 
 export type MyStatTitleProps = {

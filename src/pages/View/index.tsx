@@ -1,4 +1,5 @@
 import Lines from '@/components/Chart/Line/EchartLine';
+import MyStatistic from '@/components/Chart/MyStatistic/MyStatistic';
 import fetchChartData from '@/services/web-back';
 import { formatOriginLineDataToComponents } from '@/utils/format';
 import { PageContainer } from '@ant-design/pro-components';
@@ -11,6 +12,9 @@ const AccessPage: React.FC = () => {
     {},
   );
   const [date, setDate] = useState<string[]>([]);
+  const [totalStaticData, setTotalStaticData] = useState<{
+    [key: string]: any[];
+  }>({});
   // const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // 副作用 获取总的统计数据
@@ -27,9 +31,13 @@ const AccessPage: React.FC = () => {
     });
 
     if (totalLine.code === 0) {
-      const { date: chartDate, classificationData } =
-        formatOriginLineDataToComponents(totalLine);
+      const {
+        date: chartDate,
+        classificationData,
+        staticData,
+      } = formatOriginLineDataToComponents(totalLine);
       console.log('classifyData', classificationData);
+      setTotalStaticData(staticData);
       setTotalLineData(classificationData);
       setDate(chartDate);
       // setIsLoading(false)
@@ -48,15 +56,25 @@ const AccessPage: React.FC = () => {
         title: '数据看板',
       }}
     >
-      {/* {isLoading ?
-        <Spin size="large" /> : */}
       <Row gutter={[30, 30]}>
         {Object.entries(totalLineData).map((type) => {
-          console.log('type', type);
+          // console.log('type', type);
           const [key, value] = type;
           return (
-            <Col span={12} key={key}>
+            <Col
+              span={12}
+              key={`lineChart_${key}`}
+              style={{ display: 'flex', justifyContent: 'center' }}
+            >
               <Lines key={key} title={key} data={value} date={date} />
+            </Col>
+          );
+        })}
+        {Object.entries(totalStaticData).map((type) => {
+          const [key, value] = type;
+          return (
+            <Col span={24} key={`static_${key}`}>
+              <MyStatistic data={value} title={key} path={key} />
             </Col>
           );
         })}
