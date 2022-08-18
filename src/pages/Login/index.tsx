@@ -1,15 +1,16 @@
 import { history, useModel } from '@umijs/max';
 import { Button, Card, Col, Form, Input, notification, Row } from 'antd';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { request } from 'umi';
 
 const Login: React.FC = () => {
   const { initialState, setInitialState } = useModel('@@initialState');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   //判断是否登录决定是否跳转至登录页
   useEffect(() => {
     if (initialState?.isLogin) {
-      history.push('/');
+      history.push('/view-presentation');
     }
   }, [initialState]);
 
@@ -23,6 +24,7 @@ const Login: React.FC = () => {
 
   //提交用户名与密码的逻辑
   const onFinish = async (values: any) => {
+    setIsLoading(true);
     let res = await request(
       'https://mock.apifox.cn/m1/1411666-0-default/api/admin/login',
       {
@@ -33,6 +35,7 @@ const Login: React.FC = () => {
         },
       },
     );
+    setIsLoading(false);
     //根据返回信息设置登录信息
     if (res.loginSuccess) {
       // if (1) {
@@ -83,7 +86,7 @@ const Login: React.FC = () => {
             </Form.Item>
 
             <Form.Item wrapperCol={{ offset: 10, span: 8 }}>
-              <Button type="primary" htmlType="submit">
+              <Button type="primary" htmlType="submit" loading={isLoading}>
                 登录
               </Button>
             </Form.Item>
