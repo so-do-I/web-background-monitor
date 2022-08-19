@@ -1,16 +1,26 @@
+import { clacDiff, formatRouteToKeyPath } from '@/utils/format';
 import {
   ArrowDownOutlined,
   ArrowUpOutlined,
   BarChartOutlined,
 } from '@ant-design/icons';
 import { history } from '@umijs/max';
-import { Button, Card, Col, PageHeader, Row, Statistic } from 'antd';
+import { Button, Card, Col, PageHeader, Row, Statistic, Tag } from 'antd';
 import { useState } from 'react';
 import { MyStatProps } from '../type';
 import MyStaticTitle from './MyStaticTitle';
 
 export default function MyStatistic(props: MyStatProps) {
-  const { data, title, path } = props;
+  const { data, path, num } = props;
+  console.log('static data', data)
+  let limitData;
+  if (num) {
+    limitData = data?.sort((a, b) => clacDiff(b.data, true) - clacDiff(a.data, true)).slice(0, num)
+  } else {
+    limitData = data
+  }
+
+
   const [activeTabKey2, setActiveTabKey2] = useState<string>('today');
   const tabListNoTitle = [
     {
@@ -26,25 +36,29 @@ export default function MyStatistic(props: MyStatProps) {
       tab: '均值',
     },
   ];
+
+  const keyPathDict = formatRouteToKeyPath();
+
   const onTab2Change = (key: string) => {
     setActiveTabKey2(key);
   };
 
   const handleClickMore = (e: any) => {
-    const path = e.currentTarget.id ?? '/';
-    history.push(`./${path}`);
+    const key = e.currentTarget.id ?? '/';
+    history.push(keyPathDict[key]?.path ?? '');
   };
 
-  if (data) {
+  if (limitData) {
     return (
       <>
         <Row>
           <Col span={24}>
             <PageHeader
-              onBack={() => {}}
+              onBack={() => { }}
               backIcon={<BarChartOutlined />}
-              title={title}
-              subTitle={path}
+              title={keyPathDict[path!]?.name ?? path}
+              tags={<Tag color="blue">{path}</Tag>}
+              subTitle={`数值波动TOP${num ? num : limitData.length}`}
               extra={
                 <Button type="text" onClick={handleClickMore} id={path}>
                   More
@@ -54,13 +68,8 @@ export default function MyStatistic(props: MyStatProps) {
           </Col>
         </Row>
         <Row gutter={[30, 30]}>
-          {data.map((d) => {
-            const todayValue = d.data.at(-1) as number;
-            const yesterdayValue = d.data.at(-2) as number;
-            const diffValue =
-              yesterdayValue === 0
-                ? todayValue * 100
-                : ((todayValue - yesterdayValue) / yesterdayValue) * 100;
+          {limitData.map((d) => {
+            const diffValue = clacDiff(d.data);
             const avg = d.data.reduce((a, b) => a + b) / d.data.length;
 
             const contentListNoTitle: Record<string, React.ReactNode> = {
@@ -103,7 +112,7 @@ export default function MyStatistic(props: MyStatProps) {
                     size: 'small',
                   }}
                   activeTabKey={activeTabKey2}
-                  tabBarExtraContent={<a href="#">More</a>}
+                  // tabBarExtraContent={<a href="#">More</a>}
                   onTabChange={(key) => {
                     onTab2Change(key);
                   }}

@@ -15,13 +15,14 @@ const AccessPage: React.FC = () => {
   const [totalStaticData, setTotalStaticData] = useState<{
     [key: string]: any[];
   }>({});
-  // const [isLoading, setIsLoading] = useState<boolean>(true);
+
+
 
   // 副作用 获取总的统计数据
   // 当有值时不再请求后端，直接返回
   const fetchTotalLineData = async () => {
     if (Object.keys(totalLineData).length > 0) {
-      console.log('has keys', Object.keys(totalLineData));
+      // console.log('has keys', Object.keys(totalLineData));
       console.log(totalLineData);
       return;
     }
@@ -74,7 +75,7 @@ const AccessPage: React.FC = () => {
           const [key, value] = type;
           return (
             <Col span={24} key={`static_${key}`}>
-              <MyStatistic data={value} title={key} path={key} />
+              <MyStatistic data={value} path={key} num={4} />
             </Col>
           );
         })}

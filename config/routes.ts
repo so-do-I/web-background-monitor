@@ -22,11 +22,13 @@ export default [
     routes: [
       {
         name: '接口异常',
+        key: 'interface',
         path: '/error/interface',
         component: './Error/Interface',
       },
       {
         name: '前端异常',
+        key: 'frontend',
         path: '/error/frontend',
         component: './Error/Forntend',
       },
@@ -35,6 +37,7 @@ export default [
   {
     name: '用户行为数据',
     path: '/user',
+    key: 'user',
     icon: 'UserOutlined',
     component: './User',
     // routes: [
@@ -58,6 +61,7 @@ export default [
   {
     name: '页面性能数据',
     path: '/page-performance',
+    key: 'page',
     icon: 'FileOutlined',
     component: './Page',
     //   routes: [
@@ -106,6 +110,7 @@ export default [
   {
     name: '网络性能数据',
     path: '/web-performance',
+    key: 'web',
     icon: 'GlobalOutlined',
     component: './Web',
     //   routes: [

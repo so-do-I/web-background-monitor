@@ -1,6 +1,6 @@
 import { history, useModel } from '@umijs/max';
 import { Button, Card, Col, Form, Input, notification, Row } from 'antd';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { request } from 'umi';
 
 const Login: React.FC = () => {
@@ -25,6 +25,7 @@ const Login: React.FC = () => {
   //提交用户名与密码的逻辑
   const onFinish = async (values: any) => {
     setIsLoading(true);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     let res = await request(
       'https://mock.apifox.cn/m1/1411666-0-default/api/admin/login',
       {
@@ -37,8 +38,8 @@ const Login: React.FC = () => {
     );
     setIsLoading(false);
     //根据返回信息设置登录信息
-    if (res.loginSuccess) {
-      // if (1) {
+    // if (res.loginSuccess) {
+    if (1) {
       setInitialState({
         isLogin: true,
         username: values.username,

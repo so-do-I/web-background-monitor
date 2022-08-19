@@ -1,4 +1,5 @@
 // import { fetchErrorDetails } from '@/services/fetchPrefData';
+import routes from "../../config/routes";
 // 示例方法，没有实际意义
 export function trim(str: string) {
   return str.trim();
@@ -39,4 +40,34 @@ export function formatOriginLineDataToComponents(lineData: API.lineResponse) {
   });
   console.log(classificationData);
   return { date, classificationData, staticData };
+}
+
+export function formatRouteToKeyPath() {
+  const keyPathDict: { [key: string]: { path: string, name: string } } = {};
+  routes.forEach(e => {
+    if (e.key) {
+      keyPathDict[e.key] = {
+        path: e.path,
+        name: e.name
+      }
+    }
+    if (e.routes) {
+      e.routes.forEach(ec => {
+        keyPathDict[ec.key] = {
+          path: ec.path,
+          name: ec.name
+        }
+      })
+    }
+  })
+  return keyPathDict;
+}
+
+export function clacDiff(a: number[], abs = false) {
+  const todayValue = a.at(-1) ?? 0;
+  const yesterdayValue = a.at(-2) ?? 0;
+  const diff = yesterdayValue === 0
+    ? todayValue * 100
+    : ((todayValue - yesterdayValue) / yesterdayValue) * 100;
+  return abs ? Math.abs(diff) : diff
 }
