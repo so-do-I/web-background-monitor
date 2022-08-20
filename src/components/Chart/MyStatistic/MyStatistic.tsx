@@ -11,17 +11,13 @@ import { MyStatProps } from '../type';
 import MyStaticTitle from './MyStaticTitle';
 
 export default function MyStatistic(props: MyStatProps) {
-  const { data, path, num } = props;
-  console.log('static data', data)
-  let limitData;
-  if (num) {
-    limitData = data?.sort((a, b) => clacDiff(b.data, true) - clacDiff(a.data, true)).slice(0, num)
-  } else {
-    limitData = data
-  }
+  const { data, path, num: propNum, expand, title } = props;
+  let num = propNum ?? 4
+  const limitData = data?.sort((a, b) => clacDiff(b.data, true) - clacDiff(a.data, true)).slice(0, num)
 
-
+  const [limit, setLimit] = useState(true);
   const [activeTabKey2, setActiveTabKey2] = useState<string>('today');
+  const [staticData, setStaticData] = useState(limitData);
   const tabListNoTitle = [
     {
       key: 'today',
@@ -43,12 +39,18 @@ export default function MyStatistic(props: MyStatProps) {
     setActiveTabKey2(key);
   };
 
-  const handleClickMore = (e: any) => {
+  const handleClickExpand = () => {
+    setStaticData(limit ? data : limitData)
+    setLimit(!limit);
+
+  };
+
+  const handleClickJump = (e: any) => {
     const key = e.currentTarget.id ?? '/';
     history.push(keyPathDict[key]?.path ?? '');
   };
 
-  if (limitData) {
+  if (staticData) {
     return (
       <>
         <Row>
@@ -56,11 +58,11 @@ export default function MyStatistic(props: MyStatProps) {
             <PageHeader
               onBack={() => { }}
               backIcon={<BarChartOutlined />}
-              title={keyPathDict[path!]?.name ?? path}
+              title={title ? title : keyPathDict[path!]?.name ?? path}
               tags={<Tag color="blue">{path}</Tag>}
-              subTitle={`数值波动TOP${num ? num : limitData.length}`}
+              subTitle={`数值波动TOP${num ? num : staticData.length}`}
               extra={
-                <Button type="text" onClick={handleClickMore} id={path}>
+                <Button type="text" onClick={expand ? handleClickExpand : handleClickJump} id={path}>
                   More
                 </Button>
               }
@@ -68,7 +70,7 @@ export default function MyStatistic(props: MyStatProps) {
           </Col>
         </Row>
         <Row gutter={[30, 30]}>
-          {limitData.map((d) => {
+          {staticData.map((d) => {
             const diffValue = clacDiff(d.data);
             const avg = d.data.reduce((a, b) => a + b) / d.data.length;
 

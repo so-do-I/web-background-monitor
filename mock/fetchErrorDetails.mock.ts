@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 export default {
   'GET /api/charts/error-details': (req: Request, res: Response) => {
     res.status(200).send({
-      msg: 'culpa velit sunt ea',
+      msg: 'success',
       data: [
         {
           os_version: '5142742766205024',
@@ -1307,7 +1307,7 @@ export default {
           os_type: 'tos',
         },
       ],
-      code: 21,
+      code: 0,
     });
   },
 };

@@ -6,10 +6,6 @@ export function trim(str: string) {
 }
 
 export function formatOriginLineDataToComponents(lineData: API.lineResponse) {
-  // const lineData = []
-  // const descriptionData = []
-  // const staicData = []
-  console.log('lineData', lineData);
   const date = lineData?.date as string[];
   const classificationData: { [key: string]: any[] } = {};
   const staticData: { [key: string]: any[] } = {};
@@ -41,6 +37,26 @@ export function formatOriginLineDataToComponents(lineData: API.lineResponse) {
   console.log(classificationData);
   return { date, classificationData, staticData };
 }
+
+export function formatOriginErrorDetailToComponets(errorDetails: API.errorResponse) {
+  const errorNum: { [key in string]: number } = {}
+  const classifiedErrorDetail: { [key in string]: any } = {}
+
+  errorDetails.data!.forEach(element => {
+    if (errorNum[element.error_type]) {
+      errorNum[element.error_type] = errorNum[element.error_type] + 1
+    } else {
+      errorNum[element.error_type] = 1
+    }
+    if (classifiedErrorDetail[element.error_type]) {
+      classifiedErrorDetail[element.error_type].push(element)
+    } else {
+      classifiedErrorDetail[element.error_type] = [element]
+    }
+  })
+  return { errorNum, classifiedErrorDetail }
+}
+
 
 export function formatRouteToKeyPath() {
   const keyPathDict: { [key: string]: { path: string, name: string } } = {};

@@ -26,7 +26,7 @@ const genDataWithLength = (interval: number = 7): string[] => {
   const today = dayjs();
   const dateArray = []
   for (let i = interval; i > 0; i--) {
-    console.log('days', today.subtract(i, 'day').format('YYYY-MM-DD'))
+    // console.log('days', today.subtract(i, 'day').format('YYYY-MM-DD'))
     dateArray.push(today.subtract(i, 'day').format('YYYY-MM-DD'))
   }
   // console.log('dateArray', dateArray)
@@ -84,8 +84,10 @@ const mockRes = (event: string, interval: number) => {
 
 export default {
   'GET /api/charts/line': (req: Request, res: Response) => {
-    const { event_name, time_interval = '7' } = req.params;
-    const time = parseInt(time_interval);
-    res.status(200).send(mockRes(event_name, time));
+    // console.log('req', req);
+    const { event_name, time_interval = '7' } = req.query;
+    console.log(event_name, time_interval)
+    const time = parseInt(time_interval as string);
+    res.status(200).send(mockRes(event_name as string, time));
   },
 };

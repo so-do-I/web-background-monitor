@@ -12,7 +12,7 @@ export default function MyStaticTitle(props: {
   const { titleLevel, title, subTitle, tags } = props;
   return (
     <>
-      <Row align="middle" gutter={[12, 12]} style={{ marginBottom: 5 }}>
+      <Row align="middle" gutter={[12, 12]} style={{ marginBottom: 5 }} wrap={false}>
         <Col>
           <Title level={titleLevel ?? 4} style={{ lineHeight: 1, margin: 0 }}>
             {title}

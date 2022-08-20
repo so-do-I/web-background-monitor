@@ -1,20 +1,20 @@
 declare namespace API {
   type errorDetails = {
     /** 错误类型：TypeError .. 等等 */
-    error_type?: string;
+    error_type: string;
     /** 错误信息 */
-    error_msg?: string;
+    error_msg: string;
     /** 错误发生的时间 */
-    time?: string;
+    time: string;
     /** 错误可能的原因 */
-    error_reason?: string;
+    error_reason: string;
     /** 错误发生的路径 */
-    error_bundle?: string;
-    user_id?: string;
-    device_id?: string;
-    os_type?: string;
-    os_version?: string;
-    user_ip?: string;
+    error_bundle: string;
+    user_id: string;
+    device_id: string;
+    os_type: string;
+    os_version: string;
+    user_ip: string;
   };
 
   type errorResponse = {
