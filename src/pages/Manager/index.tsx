@@ -103,6 +103,7 @@ const Manager: React.FC = () => {
       header={{
         title: '账户管理',
       }}
+      style={{ minHeight: '88vh' }}
     >
       <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
         <Form.Item

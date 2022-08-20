@@ -7,7 +7,6 @@ import { history } from 'umi';
 import TopHeader from '../src/components/TopHeader/TopHeader';
 
 const { Footer } = Layout;
-
 //登录状态
 interface userState {
   isLogin: boolean;

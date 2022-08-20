@@ -31,6 +31,7 @@ const AccessPage: React.FC = () => {
       header={{
         title: '用户行为数据',
       }}
+      style={{ minHeight: '88vh' }}
     >
       <Card title="累计数据" style={{ width: 300, fontSize: '20px' }}>
         <p>PV:{allData?.pv}</p>

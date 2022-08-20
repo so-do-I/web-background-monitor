@@ -16,8 +16,6 @@ const AccessPage: React.FC = () => {
     [key: string]: any[];
   }>({});
 
-
-
   // 副作用 获取总的统计数据
   // 当有值时不再请求后端，直接返回
   const fetchTotalLineData = async () => {
@@ -56,6 +54,7 @@ const AccessPage: React.FC = () => {
       header={{
         title: '数据看板',
       }}
+      style={{ minHeight: '88vh' }}
     >
       <Row gutter={[30, 30]}>
         {Object.entries(totalLineData).map((type) => {

@@ -92,6 +92,7 @@ const Page: React.FC = () => {
       header={{
         title: '网络性能',
       }}
+      style={{ minHeight: '88vh' }}
     >
       <Table
         columns={columns}
