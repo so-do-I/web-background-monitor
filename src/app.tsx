@@ -2,8 +2,11 @@
 // 全局初始化数据配置，用于 Layout 用户信息和权限初始化
 // 更多信息见文档：https://next.umijs.org/docs/api/runtime-config#getinitialstate
 import { RunTimeLayoutConfig } from '@umijs/max';
+import { Layout } from 'antd';
 import { history } from 'umi';
 import TopHeader from '../src/components/TopHeader/TopHeader';
+
+const { Footer } = Layout;
 
 //登录状态
 interface userState {
@@ -34,6 +37,11 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     },
     rightContentRender: () => {
       return <TopHeader />;
+    },
+    footerRender: () => {
+      return (
+        <Footer style={{ textAlign: 'center' }}>Designed by 明天不摆</Footer>
+      );
     },
     layout: 'mix',
     contentWidth: 'Fluid',
