@@ -10,7 +10,7 @@ import { Props } from '../type';
 function EchartDetailLine(props: Props) {
     const chartRef = useRef(null);
 
-    const { date, data } = props;
+    const { date, data, title } = props;
     const options: EChartsOption = {
         // title: {
         //     text: title,
@@ -58,7 +58,7 @@ function EchartDetailLine(props: Props) {
     return (
         <Card
             style={{ width: '100%' }}
-            title='总错误数波动图'
+            title={title}
         >
 
             <div ref={chartRef} className={styles.detailchart} />

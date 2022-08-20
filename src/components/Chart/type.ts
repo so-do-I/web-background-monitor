@@ -33,3 +33,7 @@ export type BarProps = {
     [key in string]: number
   }
 }
+export type DetailBarProps = {
+  title: string;
+  data: API.statisticalData['bundle_pref']
+}

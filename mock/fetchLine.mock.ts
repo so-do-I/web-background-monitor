@@ -85,9 +85,9 @@ const mockRes = (event: string, interval: number) => {
 export default {
   'GET /api/charts/line': (req: Request, res: Response) => {
     // console.log('req', req);
-    const { event_name, time_interval = '7' } = req.query;
-    console.log(event_name, time_interval)
+    const { type, time_interval = '7' } = req.query;
+    console.log(type, time_interval)
     const time = parseInt(time_interval as string);
-    res.status(200).send(mockRes(event_name as string, time));
+    res.status(200).send(mockRes(type as string, time));
   },
 };

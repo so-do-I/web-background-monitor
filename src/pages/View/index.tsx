@@ -35,7 +35,7 @@ const AccessPage: React.FC = () => {
         classificationData,
         staticData,
       } = formatOriginLineDataToComponents(totalLine);
-      console.log('classifyData', classificationData);
+      // console.log('classifyData', classificationData);
       setTotalStaticData(staticData);
       setTotalLineData(classificationData);
       setDate(chartDate);

@@ -40,7 +40,7 @@ const AccessPage: React.FC = () => {
       time_interval: 7,
     });
     const frontEndErrorLine = await fetchLine({
-      event_name: 'frontend',
+      type: 'frontend',
       time_interval: 14,
     });
     const {

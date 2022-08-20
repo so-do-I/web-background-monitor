@@ -1,106 +1,129 @@
 import { PageContainer } from '@ant-design/pro-components';
-import { Table } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
+import { Card, Col, PageHeader, Row } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { request } from 'umi';
+import fetchChartData from '@/services/web-back';
+import _ from 'lodash';
+import { formatOriginLineDataToComponents } from '@/utils/format';
 
-interface DataType {
-  id: number;
-  fp: string;
-  fcp: string;
-  lcp: string;
-  fmp: string;
-  dcl: string;
-  l: string;
-  tti: string;
-  fid: string;
-}
+import MyStatistic from '@/components/Chart/MyStatistic/MyStatistic';
+import EchartDetailLine from '@/components/Chart/Line/EchartDetailLine';
+import { LineChartOutlined } from '@ant-design/icons';
+import EchartBar from '@/components/Chart/Bar/EchartBar';
+import EchartPie from '@/components/Chart/Pie/EchartPie';
+import EchartDetailBar from '@/components/Chart/Bar/EchartDetailBar';
 
-const Page: React.FC = () => {
-  const [dataSource, setdataSource] = useState<DataType[]>([]);
+const { fetchLine, getStatistical } = fetchChartData.fetchChartData
+const AccessPage: React.FC = () => {
+  const [bundleData, setBundleData] = useState([])
+
+  const [date, setDate] = useState<string[]>([]);
+  const [recentlyLineData, setRecentlyLineData] = useState<{
+    [key: string]: any[];
+  }>({});
+  const [totalStaticData, setTotalStaticData] = useState<{
+    [key: string]: any[];
+  }>({});
+
+  const [loading, setLoading] = useState(true)
+
+
+  //获取用户行为数据
+
+  const getPagePrefData = async () => {
+    if (!loading) {
+      return;
+    }
+
+    // 获取连续一段时间的pv数据 
+    const recentlyPerfData = await fetchLine({
+      type: 'page',
+    });
+    const statistialData = await getStatistical({
+      params: {
+        query: 'bundle_pref'
+      }
+    });
+    console.log('statistialData', statistialData)
+    const { bundle_pref } = statistialData.data
+    const {
+      date: chartDate,
+      classificationData,
+      staticData,
+    } = formatOriginLineDataToComponents(recentlyPerfData);
+    console.log('bundle_pref', bundle_pref);
+    setRecentlyLineData(classificationData);
+    setDate(chartDate);
+    setTotalStaticData(staticData);
+    setBundleData(bundle_pref);
+    setLoading(prev => false)
+
+  }
 
   useEffect(() => {
-    async function getData() {
-      let res = await request(
-        'https://mock.apifox.cn/m1/1411666-0-default/api/pages/performance',
-      );
-      setdataSource(res.data);
-    }
-    getData();
-  }, []);
+    getPagePrefData();
 
-  const columns: ColumnsType<DataType> = [
-    {
-      title: '编号',
-      dataIndex: 'id',
-      key: 'id',
-      render: (id) => <p>{id}</p>,
-    },
-    {
-      title: '首次绘制',
-      dataIndex: 'fp',
-      key: 'fp',
-      render: (fp) => <p>{fp}</p>,
-    },
-    {
-      title: '首次内容绘制',
-      dataIndex: 'fcp',
-      key: 'fcp',
-      render: (fcp) => <p>{fcp}</p>,
-    },
-    {
-      title: '最大内容渲染',
-      dataIndex: 'lcp',
-      key: 'lcp',
-      render: (lcp) => <p>{lcp}</p>,
-    },
-    {
-      title: '首次有效绘制',
-      dataIndex: 'fmp',
-      key: 'fmp',
-      render: (fmp) => <p>{fmp}</p>,
-    },
-    {
-      title: '文档内容全部载入',
-      dataIndex: 'dcl',
-      key: 'dcl',
-      render: (dcl) => <p>{dcl}</p>,
-    },
-    {
-      title: '依赖资源全部载入',
-      dataIndex: 'l',
-      key: 'l',
-      render: (l) => <p>{l}</p>,
-    },
-    {
-      title: '可交互时间',
-      dataIndex: 'tti',
-      key: 'tti',
-      render: (tti) => <p>{tti}</p>,
-    },
-    {
-      title: '首次输入延迟',
-      dataIndex: 'fid',
-      key: 'fid',
-      render: (fid) => <p>{fid}</p>,
-    },
-  ];
+
+  })
 
   return (
     <PageContainer
       ghost
       header={{
-        title: '网络性能',
+        title: '页面性能',
       }}
       style={{ minHeight: '88vh' }}
     >
-      <Table
-        columns={columns}
-        dataSource={dataSource}
-        pagination={{ pageSize: 10 }}
-      />
+      <Row>
+        {Object.entries(totalStaticData).map((type) => {
+          const [key, value] = type;
+          return (
+            <Col span={24} key={`static_${key}`}>
+              <MyStatistic data={value} path={key} num={4} expand={true} title='数值卡片' />
+            </Col>
+          );
+        })}
+
+      </Row>
+      <Row style={{ marginTop: 20 }}>
+        <Col span={24}>
+          <PageHeader
+            onBack={() => { }}
+            backIcon={<LineChartOutlined />}
+            title='波动图表'
+          />
+        </Col>
+        {Object.entries(recentlyLineData).map((type) => {
+          const [key, value] = type;
+          return (
+            <Col
+              span={24}
+              key={`lineChart_${key}`}
+              style={{ display: 'flex', justifyContent: 'center' }}
+            >
+              <EchartDetailLine key={key} title={'页面性能'} data={value} date={date} />
+            </Col>
+          );
+        })}
+      </Row>
+
+      <Row style={{ marginTop: 20 }}>
+        <Col span={24}>
+          <PageHeader
+            onBack={() => { }}
+            backIcon={<LineChartOutlined />}
+            title='统计图表'
+          />
+        </Col>
+        <Col span={24}>
+          <Card title='资源平均加载耗时'>
+            <EchartDetailBar data={bundleData.sort((a, b) => { return a.load_time - b.load_time })} title={''} />
+          </Card>
+        </Col>
+
+
+      </Row>
     </PageContainer>
   );
 };
 
-export default Page;
+export default AccessPage;

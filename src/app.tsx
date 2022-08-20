@@ -39,7 +39,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     },
     footerRender: () => {
       return (
-        <Footer style={{ textAlign: 'center' }}>Designed by 明天不摆</Footer>
+        <Footer style={{ textAlign: 'center', marginTop: 20 }}>Designed by 明天不摆</Footer>
       );
     },
     layout: 'mix',

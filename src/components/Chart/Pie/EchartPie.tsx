@@ -1,3 +1,4 @@
+import React from 'react'
 import useCharts from '@/utils/useChart';
 import { EChartsOption } from 'echarts';
 import _ from 'lodash';
@@ -5,11 +6,9 @@ import { useRef } from 'react';
 import styles from '../ChartCommenStyle.less';
 import { BarProps } from '../type';
 
-
-export default function EchartBar(props: BarProps) {
+export default function EchartPie(props: BarProps) {
     const { title, data } = props;
-    console.log(data)
-    console.log(Object.keys(data))
+
     const chartRef = useRef(null);
     const options: EChartsOption = {
         title: {
@@ -17,33 +16,40 @@ export default function EchartBar(props: BarProps) {
         },
         colorBy: 'data',
         legend: {
-            type: 'scroll',
+            orient: 'vertical',
+            left: 'left'
         },
         dataZoom: {
             type: 'slider',
+            start: 150
         },
         grid: {
             left: '7%',
             right: '7%',
         },
         tooltip: {
-            trigger: 'axis',
+            trigger: 'item',
+            formatter: '{b} : {c} ({d}%)'
         },
-        xAxis: {
-            type: 'category',
-            data: Object.keys(data),
-        },
-        yAxis: {
-            type: 'value',
-        },
-        series: [{
-            type: 'bar',
-            data: Object.entries(data),
-            label: {
-                show: true,
-                position: 'top'
-            },
-        }]
+        series: [
+            {
+                // name: 'Area Mode',
+                type: 'pie',
+                radius: [50, 140],
+                // center: ['50', '50%'],
+                roseType: 'area',
+                itemStyle: {
+                    borderRadius: 5
+                },
+
+
+                data: Object.entries(data).map(d => ({
+                    name: d[0],
+                    value: d[1]
+                }))
+
+            }
+        ],
 
     };
     useCharts(chartRef, options);

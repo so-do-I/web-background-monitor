@@ -5,12 +5,13 @@ export function trim(str: string) {
   return str.trim();
 }
 
-export function formatOriginLineDataToComponents(lineData: API.lineResponse) {
+export function formatOriginLineDataToComponents(lineData: API.lineResponse, limit?: number) {
   const date = lineData?.date as string[];
   const classificationData: { [key: string]: any[] } = {};
   const staticData: { [key: string]: any[] } = {};
+  const tempLineData = limit ? lineData.data!.slice(0, limit) : lineData.data 
 
-  lineData.data!.forEach((element) => {
+  tempLineData!.forEach((element) => {
     if (classificationData[element.type]) {
       classificationData[element.type].push(element.data);
     } else {

@@ -31,3 +31,22 @@ export async function fetchLine(
     ...(options || {}),
   });
 }
+
+/** fetchWebPV GET /api/charts/pv */
+export async function getPv(options?: { [key: string]: any }) {
+  return request<{ code: number; msg: string; data: API.totalPV }>('/api/charts/pv', {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
+
+/** fetchStatisticalData GET /api/charts/statistical */
+export async function getStatistical(options?: { [key: string]: any }) {
+  return request<{ code: number; msg: string; data: API.statisticalData }>(
+    '/api/charts/statistical',
+    {
+      method: 'GET',
+      ...(options || {}),
+    },
+  );
+}
